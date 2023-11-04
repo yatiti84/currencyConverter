@@ -1,5 +1,14 @@
 from flask import current_app
+from decimal import Decimal, ROUND_HALF_UP
 
+def round_accurate(num, decimal):
+    str_deci = 1
+    for _ in range(decimal):
+        str_deci = str_deci / 10
+    str_deci = str(str_deci)
+    result = Decimal(str(num)).quantize(Decimal(str_deci), rounding=ROUND_HALF_UP)
+    result = float(result)
+    return result
 
 def parameter_check(params, currency_data):
 
@@ -30,7 +39,7 @@ def convert(params):
                     'error_msg': 'amount needs to be greater or equal than 0'
                     }
         currency = currency_data['currencies'][source][target]
-        converted = round(amount * currency, 2)
+        converted = round_accurate(amount * currency, 2)
         # TODO: check range of input amount correspond to currency
         return {'msg': 'success',
                 'amount': '${:,}'.format(converted)
