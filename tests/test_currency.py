@@ -19,7 +19,7 @@ class CheckCurrencyConvert(SettingBase):
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['msg'], 'success')
-        self.assertEqual(data['amount'], '$170496.53')
+        self.assertEqual(data['amount'], '$170,496.53')
 
     def test_amount_float(self):
         self.amount = '$1.525'
@@ -37,7 +37,7 @@ class CheckCurrencyConvert(SettingBase):
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['msg'], 'fail')
-        self.assertEqual(data['errorMsg'], 'source or target not exists')
+        self.assertEqual(data['error_msg'], 'source or target not exists')
 
     def test_missing_parameter(self):
         response = self.client.get(
@@ -45,7 +45,7 @@ class CheckCurrencyConvert(SettingBase):
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['msg'], 'fail')
-        self.assertEqual(data['errorMsg'], 'source or target not exists')
+        self.assertEqual(data['error_msg'], 'source or target not exists')
 
     def test_case_sensitive(self):
         self.target = 'jpy'
@@ -54,7 +54,7 @@ class CheckCurrencyConvert(SettingBase):
         data = response.get_json()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['msg'], 'success')
-        self.assertEqual(data['amount'], '$170496.53')
+        self.assertEqual(data['amount'], '$170,496.53')
 
     def test_negative_amount(self):
         self.amount = '-1'
