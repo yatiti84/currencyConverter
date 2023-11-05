@@ -14,7 +14,7 @@ class SettingBase(TestCase):
 
 
 class CheckCurrencyConvert(SettingBase):
-    def test_convert_currency(self):
+    def test_convert_currency_success(self):
         response = self.client.get(
             f'/convert?source={self.source}&target={self.target}&amount={self.amount}',)
         data = response.get_json()
@@ -22,7 +22,7 @@ class CheckCurrencyConvert(SettingBase):
         self.assertEqual(data['msg'], 'success')
         self.assertEqual(data['amount'], '$170,496.53')
 
-    def test_amount_float(self):
+    def test_amount_is_float(self):
         self.amount = '$1.525'
         response = self.client.get(
             f'/convert?source={self.source}&target={self.target}&amount={self.amount}',)
@@ -40,7 +40,7 @@ class CheckCurrencyConvert(SettingBase):
         self.assertEqual(data['msg'], 'fail')
         self.assertEqual(data['error_msg'], 'source or target not exists')
 
-    def test_missing_parameter(self):
+    def test_missing_source_will_fail(self):
         response = self.client.get(
             f'/convert?target={self.target}&amount={self.amount}',)
         data = response.get_json()
@@ -48,7 +48,15 @@ class CheckCurrencyConvert(SettingBase):
         self.assertEqual(data['msg'], 'fail')
         self.assertEqual(data['error_msg'], 'source or target not exists')
 
-    def test_case_sensitive(self):
+    def test_missing_target_will_fail(self):
+        response = self.client.get(
+            f'/convert?source={self.source}&amount={self.amount}',)
+        data = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['msg'], 'fail')
+        self.assertEqual(data['error_msg'], 'source or target not exists')
+
+    def test_target_ignore_case(self):
         self.target = 'jpy'
         response = self.client.get(
             f'/convert?source={self.source}&target={self.target}&amount={self.amount}',)
@@ -57,7 +65,16 @@ class CheckCurrencyConvert(SettingBase):
         self.assertEqual(data['msg'], 'success')
         self.assertEqual(data['amount'], '$170,496.53')
 
-    def test_negative_amount(self):
+    def test_source_ignore_case(self):
+        self.source = 'usd'
+        response = self.client.get(
+            f'/convert?source={self.source}&target={self.target}&amount={self.amount}',)
+        data = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['msg'], 'success')
+        self.assertEqual(data['amount'], '$170,496.53')
+
+    def test_negative_amount_will_fail(self):
         self.amount = '-1'
         response = self.client.get(
             f'/convert?source={self.source}&target={self.target}&amount={self.amount}',)
