@@ -66,7 +66,3 @@ class CheckCurrencyConvert(SettingBase):
         self.assertEqual(data['msg'], 'fail')
         self.assertEqual(data['error_msg'],
                          'amount needs to be greater or equal than 0')
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -52,12 +52,3 @@ def convert(params):
             'amount': '$0',
             'error_msg': 'source or target not exists'
             }
-
-
-# if __name__ == '__main__':
-    # parameter = {
-    #     'source':'USD',
-    #     'target': 'JPY',
-    #     amount: '$1,525'
-    # }
-    # convert(parameter)
