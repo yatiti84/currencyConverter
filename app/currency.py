@@ -2,6 +2,7 @@ from flask import current_app
 from decimal import Decimal, ROUND_HALF_UP
 from .const import DEFAULT_CURRENCY
 
+
 def round_accurate(num, decimal):
     str_deci = 1
     for _ in range(decimal):
@@ -17,9 +18,10 @@ def parameter_check(params, currency_data):
 
     source = params.get('source', default='', type=str).upper()
     target = params.get('target', default='', type=str).upper()
-    amount = params.get('amount', default='0', type=str)
+    amount = params.get('amount', type=str)
+    if amount == None:
+        raise Exception("amount is missing.")
     amount = float(amount.replace('$', '').replace(',', ''))
-
     if source in currency_data['currencies'] and target in currency_data['currencies'][source]:
         return source, target, amount
     return False
@@ -37,18 +39,11 @@ def convert(params):
     if isinstance(parameters, tuple):
         source, target, amount = parameters
         if amount < 0:
-            return {'msg': 'fail',
-                    'amount': f'${amount}',
-                    'error_msg': 'amount needs to be greater or equal than 0'
-                    }
+            raise Exception('amount needs to be greater or equal than 0')
         currency = currency_data['currencies'][source][target]
         converted = round_accurate(amount * currency, 2)
         # TODO: check range of input amount correspond to currency
         return {'msg': 'success',
                 'amount': '${:,}'.format(converted)
                 }
-
-    return {'msg': 'fail',
-            'amount': '$0',
-            'error_msg': 'source or target not exists'
-            }
+    raise Exception('source or target not exists')

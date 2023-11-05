@@ -56,6 +56,14 @@ class CheckCurrencyConvert(SettingBase):
         self.assertEqual(data['msg'], 'fail')
         self.assertEqual(data['error_msg'], 'source or target not exists')
 
+    def test_missing_amount_will_raise_error(self):
+        response = self.client.get(
+            f'/convert?source={self.source}&target={self.target}',)
+        data = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['msg'], 'fail')
+        self.assertEqual(data['error_msg'], 'amount is missing.')
+
     def test_target_ignore_case(self):
         self.target = 'jpy'
         response = self.client.get(
@@ -83,3 +91,13 @@ class CheckCurrencyConvert(SettingBase):
         self.assertEqual(data['msg'], 'fail')
         self.assertEqual(data['error_msg'],
                          'amount needs to be greater or equal than 0')
+
+    def test_amount_is_not_number(self):
+        self.amount = "hello"
+        response = self.client.get(
+            f'/convert?source={self.source}&target={self.target}&amount={self.amount}',)
+        data = response.get_json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['msg'], 'fail')
+        self.assertEqual(data['error_msg'],
+                         "could not convert string to float: 'hello'")

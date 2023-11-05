@@ -14,8 +14,12 @@ def create_app(config_name):
 
     @app.route('/convert', methods=['GET'])
     def convert_currency():
-
-        args = request.args
-        return convert(args)
+        try:
+            return convert(request.args)
+        except Exception as e:
+            return {'msg': 'fail',
+                    'amount': '$0',
+                    'error_msg': str(e)
+                    }
 
     return app
