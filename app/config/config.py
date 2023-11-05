@@ -3,7 +3,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-class BaseConfig: 
+class BaseConfig:
     DEFAULT_CURRENCY = {
         "currencies": {
             "TWD": {
@@ -24,16 +24,17 @@ class BaseConfig:
         }
     }
 
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     CURRENCY_MODE = False
 
 
-
-
 class TestingConfig(BaseConfig):
     TESTING = True
     CURRENCY_MODE = False
+
+
 config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
