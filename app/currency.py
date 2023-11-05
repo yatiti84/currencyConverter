@@ -1,6 +1,6 @@
 from flask import current_app
 from decimal import Decimal, ROUND_HALF_UP
-
+from .const import DEFAULT_CURRENCY
 
 def round_accurate(num, decimal):
     str_deci = 1
@@ -27,7 +27,7 @@ def parameter_check(params, currency_data):
 
 def get_currency_data():
     if current_app.config['CURRENCY_MODE'] is False:
-        return current_app.config['DEFAULT_CURRENCY']
+        return DEFAULT_CURRENCY
     # TODO: add different sources to get the currency data
 
 
