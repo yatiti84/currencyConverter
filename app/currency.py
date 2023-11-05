@@ -26,7 +26,7 @@ def parameter_check(params, currency_data):
 
 
 def get_currency_data():
-    if current_app.config['CURRENCY_MODE'] is False:
+    if current_app.config['IS_DEFAULT_CURRENCY_DATA']:
         return DEFAULT_CURRENCY
     # TODO: add different sources to get the currency data
 

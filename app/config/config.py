@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class BaseConfig:
-    CURRENCY_MODE = False
+    IS_DEFAULT_CURRENCY_DATA = True
 
 
 class DevelopmentConfig(BaseConfig):
