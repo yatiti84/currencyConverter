@@ -22,9 +22,11 @@ def parameter_check(params, currency_data):
     if amount == None:
         raise Exception("amount is missing.")
     amount = float(amount.replace('$', '').replace(',', ''))
+    if amount < 0:
+        raise Exception('amount needs to be greater or equal than 0')
     if source in currency_data['currencies'] and target in currency_data['currencies'][source]:
         return source, target, amount
-    return False
+    raise Exception('source or target not exists')
 
 
 def get_currency_data():
@@ -36,14 +38,10 @@ def get_currency_data():
 def convert(params):
     currency_data = get_currency_data()
     parameters = parameter_check(params, currency_data)
-    if isinstance(parameters, tuple):
-        source, target, amount = parameters
-        if amount < 0:
-            raise Exception('amount needs to be greater or equal than 0')
-        currency = currency_data['currencies'][source][target]
-        converted = round_accurate(amount * currency, 2)
-        # TODO: check range of input amount correspond to currency
-        return {'msg': 'success',
-                'amount': '${:,}'.format(converted)
-                }
-    raise Exception('source or target not exists')
+    source, target, amount = parameters
+    currency = currency_data['currencies'][source][target]
+    converted = round_accurate(amount * currency, 2)
+    # TODO: check range of input amount correspond to currency
+    return {'msg': 'success',
+            'amount': '${:,}'.format(converted)
+            }
